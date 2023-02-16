@@ -5,8 +5,9 @@ const config = {
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: 'bundle.js'
+    filename: 'main.js'
   },
+  devtool: 'inline-source-map',
   module: {
     rules: [
       {
@@ -15,10 +16,6 @@ const config = {
           'style-loader',
           'css-loader'
         ]
-      },
-      {
-        test: /\.svg$/,
-        use: 'file-loader'
       },
       {
         test: /\.png$/,
@@ -30,6 +27,10 @@ const config = {
             }
           }
         ]
+      },
+      {
+        test: /\.svg$/,
+        use: 'file-loader'
       }
     ]
   }
