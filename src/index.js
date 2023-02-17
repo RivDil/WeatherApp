@@ -10,7 +10,7 @@ import './style.css';
 
     const country = document.createElement('div');
 
-
+    const hours = document.createElement('div');
 
     const changeMetrics = document.createElement('button');
     changeMetrics.textContent = 'Display °F'; 
@@ -22,19 +22,25 @@ import './style.css';
         if (isMetric) {
             changeMetrics.textContent = 'Display °F';
             weatherCountry(currentCountry, 'metric');
+            forecastCountry(currentCountry, 'metric');
+            
         } else {
             changeMetrics.textContent = 'Display °C';
             weatherCountry(currentCountry, 'imperial');
+            forecastCountry(currentCountry, 'imperial');
         } 
     });
     content.appendChild(div);
-    div.appendChild(country)
-    div.appendChild(input)
+    div.appendChild(input);
     div.appendChild(changeMetrics);
+    div.appendChild(country);
+    div.appendChild(hours);
+
     
     function handleInput() {
         let countryName = input.value;
         weatherCountry(countryName, isMetric ? 'metric' : 'imperial');
+        forecastCountry(countryName, isMetric ? 'metric' : 'imperial')
         input.value = '';
       }
       
@@ -45,7 +51,6 @@ import './style.css';
       });
 
 async function weatherCountry(c,units){
-
     country.innerHTML = '';
   try {
     const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=c94b932deb6c53642941413f335e1d8c&units=${units}`);
@@ -63,6 +68,32 @@ async function weatherCountry(c,units){
 
 }
 
+async function forecastCountry(c,units){
+    hours.innerHTML = '';
+    try{
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${c}&appid=c94b932deb6c53642941413f335e1d8c&units=${units}`);
+    const countryData = await response.json();
+
+    const hourlyCast = document.createElement('div')
+    
+    for (let i = 0; i < 8; i++) {
+        const time = countryData.list[i].dt;
+        const date = new Date(time * 1000);
+        const hours = date.getHours();
+        const formattedTime = hours < 10 ? `0${hours}:00` : `${hours}:00`;
+        const temperature = Math.round(countryData.list[i].main.temp);
+        hourlyCast.innerHTML += `<div>${formattedTime}</div><p>${temperature} ${units === 'metric' ? 'ºC' : 'ºF'}</p>`;
+
+    }
+    hours.appendChild(hourlyCast);
+
+    }catch(e){
+        console.error(e)
+    }
+}
+
+
 const weatherDefault = (async () => {
     await weatherCountry('Maracay', 'metric');
+    await forecastCountry('Maracay','metric')
 })();
