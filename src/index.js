@@ -10,46 +10,51 @@ import './style.css';
 
     const country = document.createElement('div');
 
+
+
     const changeMetrics = document.createElement('button');
-    content.appendChild(div);
-    div.appendChild(input)
-    div.appendChild(country)
-
+    changeMetrics.textContent = 'Display °F'; 
+    let isMetric = true; 
     
-
-
-
-const weatherDefault = (async () =>{
-    const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q=Caracas&appid=c94b932deb6c53642941413f335e1d8c&units=metric')
-    const countryData = await response.json();
-    let newone = document.createElement('div');
-    newone.innerHTML = `
-      <p>${countryData.name}</p>
-      <p>${countryData.main.temp} °C</p>
-      <p>${countryData.wind.speed}</p>
-    `;
-    country.appendChild(newone);
-})();
-
-input.addEventListener('keyup', function(e){
-    if (13 == e.keyCode){
+    changeMetrics.addEventListener('click', () => {
+        isMetric = !isMetric;
+        let currentCountry = document.getElementById('countryName').innerText;
+        if (isMetric) {
+            changeMetrics.textContent = 'Display °F';
+            weatherCountry(currentCountry, 'metric');
+        } else {
+            changeMetrics.textContent = 'Display °C';
+            weatherCountry(currentCountry, 'imperial');
+        } 
+    });
+    content.appendChild(div);
+    div.appendChild(country)
+    div.appendChild(input)
+    div.appendChild(changeMetrics);
+    
+    function handleInput() {
         let countryName = input.value;
-        weatherCountry(countryName)
-        input.value = ''
-    }
-})
+        weatherCountry(countryName, isMetric ? 'metric' : 'imperial');
+        input.value = '';
+      }
+      
+      input.addEventListener('keyup', function(e){
+          if (13 == e.keyCode){
+              handleInput();
+          }
+      });
 
-async function weatherCountry(c){
+async function weatherCountry(c,units){
 
     country.innerHTML = '';
   try {
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=c94b932deb6c53642941413f335e1d8c&units=metric`);
+    const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${c}&appid=c94b932deb6c53642941413f335e1d8c&units=${units}`);
     const countryData = await response.json();
     let newone = document.createElement('div');
     newone.innerHTML = `
-      <p>${countryData.name}</p>
-      <p>${countryData.main.temp}°C</p>
-      <p>${countryData.wind.speed}</p>
+      <p id='countryName'>${countryData.name}</p>
+      <p>${countryData.main.temp} ${isMetric ? '°C' : '°F'}</p>
+      <p>${countryData.wind.speed}${isMetric ? 'm/s' : 'mph'}</p>
     `;
     country.appendChild(newone);
   } catch (error) {
@@ -57,4 +62,7 @@ async function weatherCountry(c){
   }
 
 }
-//weatherCountry()
+
+const weatherDefault = (async () => {
+    await weatherCountry('Maracay', 'metric');
+})();
