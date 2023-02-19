@@ -9,9 +9,9 @@ export const DOM_CONTENT = (() => {
         const header = document.createElement('header');
         header.className = 'header';
         header.innerHTML = `
-        <div class="search">-</div>
-        <input id='countrySearch' class='hidden'/>
-        <h4 id='projectTitle'>WeatherNow</h4>
+            <div class="search">search</div>
+            <input id='countrySearch' class='hidden'/>
+            <h4 id='projectTitle'>WeatherNow</h4>
         `;
         element.appendChild(header)
     })();

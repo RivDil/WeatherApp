@@ -65,15 +65,18 @@ export const DOM_EVENTS = (() => {
         const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${c}&appid=c94b932deb6c53642941413f335e1d8c&units=${units}`);
         const countryData = await response.json();
 
-       
-    for (let i = 0; i < 8; i++) {
+        
+    for (let i = 0; i < 10; i++) {
+        const forecastHours = document.createElement('div')
         const time = countryData.list[i].dt;
         const date = new Date(time * 1000);
         const hours = date.getHours();
         const formattedTime = hours < 10 ? `0${hours}:00` : `${hours}:00`;
         const temperature = Math.round(countryData.list[i].main.temp);
-        hourlyForecast.innerHTML += `<h5>${formattedTime}</h5><figure>${countryData.list[i].clouds.all}</figure><h5>${temperature} ${units === 'metric' ? 'ºC' : 'ºF'}</h5>`;
-
+        
+        
+        forecastHours.innerHTML = `<h5>${formattedTime}</h5><figure>${countryData.list[i].clouds.all}</figure><h5>${temperature} ${units === 'metric' ? 'ºC' : 'ºF'}</h5>`;
+        hourlyForecast.appendChild(forecastHours);
 
     }
 
