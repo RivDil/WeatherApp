@@ -9,9 +9,7 @@ export const DOM_CONTENT = (() => {
         const header = document.createElement('header');
         header.className = 'header';
         header.innerHTML = `
-            <div class="search">search</div>
-            <input id='countrySearch' class='hidden'/>
-            <h4 id='projectTitle'>WeatherNow</h4>
+            <input id='countrySearch' placeholder='Search by city name'/>
         `;
         element.appendChild(header)
     })();
@@ -22,6 +20,11 @@ export const DOM_CONTENT = (() => {
         main.innerHTML = `
         <section class="main-country">
         </section>
+        
+        <section class="main-country-info">
+        </section>
+        <button id='changeUnits'>Display °F</button>
+        
         <section class='main-forecast'>
             <div>
                 <h4>Forecast by hours</h4>
@@ -29,7 +32,6 @@ export const DOM_CONTENT = (() => {
                 </div>
             </div>
         </section>
-        <button id='changeUnits'>Display °F</button>
         `;
         element.appendChild(main)
     })();
